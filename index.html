@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGA Mobility × BigChange: Service Scheduling, Engineer App and Tracking in One System</title>
+    <meta name="description" content="A tailored proposal for TGA Mobility's service team: let the system find who's next in the area, put job sheets on the engineers' iPhones, and give customers a live ETA.">
+    <meta name="author" content="BigChange">
+    <meta property="og:title" content="TGA Mobility &amp; BigChange">
+    <meta property="og:description" content="Six engineers covering England and Wales, and a schedule that lives in one person's head. Let's put it in the system.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Flex:opsz,wght@8..144,500;8..144,700;8..144,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+    <style>
+
+        :root {
+            --bc-energy-blue: #0072CE;
+            --bc-navy: #0A2240;
+            --bc-green: #28E289;
+            --bc-orange: #FF6B00;
+            --bc-light-grey: #F4F4F4;
+            --bc-charcoal: #282922;
+            --bc-white: #FFFFFF;
+
+            --spacing-1: 0.25rem;
+            --spacing-2: 0.5rem;
+            --spacing-4: 1rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            --spacing-12: 3rem;
+            --spacing-16: 4rem;
+
+            --border-radius: 0.85rem;
+            --box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.08);
+            --transition-speed: 0.3s;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bc-white);
+            color: var(--bc-charcoal);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container { max-width: 1150px; margin: 0 auto; padding: 0 var(--spacing-6); }
+        section { padding: var(--spacing-16) 0; }
+        h1, h2, h3, h4 { font-family: 'Roboto Flex', 'Inter', system-ui, sans-serif; color: var(--bc-navy); line-height: 1.15; margin-bottom: var(--spacing-4); }
+        h1 { font-size: 2.9rem; font-weight: 800; letter-spacing: -0.02em; }
+        h2 { font-size: 2.1rem; font-weight: 800; letter-spacing: -0.01em; }
+        h3 { font-size: 1.4rem; font-weight: 700; }
+        a { color: var(--bc-energy-blue); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        mark.hl-g { background: linear-gradient(180deg, transparent 55%, rgba(40,226,137,0.55) 55%); color: inherit; padding: 0 2px; }
+
+        .section-title { text-align: center; margin-bottom: var(--spacing-12); max-width: 860px; margin-left: auto; margin-right: auto; }
+        .section-title p { font-size: 1.08rem; color: #4b5563; }
+        .eyebrow { display: inline-block; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; color: var(--bc-energy-blue); margin-bottom: var(--spacing-2); }
+        .msi { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased; }
+
+        /* Sticky nav */
+        #sticky-nav { position: sticky; top: 0; z-index: 100; background-color: rgba(10,34,64,0.97); backdrop-filter: blur(8px); box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+        #sticky-nav .container { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-4); padding-top: 0.7rem; padding-bottom: 0.7rem; }
+        #sticky-nav .nav-brand img { height: 26px; display: block; }
+        #sticky-nav .nav-links { display: flex; gap: var(--spacing-4); flex-wrap: wrap; align-items: center; }
+        #sticky-nav .nav-links a { color: rgba(255,255,255,0.85); font-size: 0.85rem; font-weight: 600; padding: 0.3rem 0.2rem; border-bottom: 2px solid transparent; transition: all var(--transition-speed); }
+        #sticky-nav .nav-links a:hover { color: var(--bc-green); text-decoration: none; border-bottom-color: var(--bc-green); }
+        #sticky-nav .nav-cta { background-color: var(--bc-green); color: var(--bc-navy) !important; padding: 0.45rem 1rem !important; border-radius: 8px; border-bottom: none !important; font-weight: 700; }
+        #sticky-nav .nav-cta:hover { background-color: #21c476; }
+        #sticky-nav.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,0.35); }
+
+        /* Hero */
+        #hero { background: linear-gradient(150deg, var(--bc-navy) 0%, #0d2f5c 55%, #0a4a8f 100%); color: var(--bc-white); padding: var(--spacing-16) 0; text-align: center; position: relative; overflow: hidden; }
+        #hero::before { content: ''; position: absolute; top: -160px; right: -160px; width: 520px; height: 520px; border-radius: 50%; background: radial-gradient(circle, rgba(40,226,137,0.16) 0%, transparent 70%); pointer-events: none; }
+        #hero::after { content: ''; position: absolute; bottom: -200px; left: -180px; width: 560px; height: 560px; border-radius: 50%; background: radial-gradient(circle, rgba(0,114,206,0.25) 0%, transparent 70%); pointer-events: none; }
+        #hero .container { position: relative; z-index: 1; }
+        #hero h1, #hero p { color: var(--bc-white); }
+        #hero h1 { font-size: 3rem; max-width: 980px; margin-left: auto; margin-right: auto; }
+        #hero .subhead { font-size: 1.15rem; max-width: 860px; margin: var(--spacing-4) auto var(--spacing-8); opacity: 0.92; }
+        .hero-pill { display: inline-flex; align-items: center; gap: 0.5rem; background-color: rgba(40,226,137,0.12); border: 1px solid rgba(40,226,137,0.5); color: var(--bc-green); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.45rem 1.1rem; border-radius: 9999px; margin-bottom: var(--spacing-6); }
+        .hero-pill .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bc-green); display: inline-block; animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .3; transform: scale(.65); } }
+        .hero-accent { background: linear-gradient(135deg, var(--bc-green), #5ad1ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-chip { background:#fff; border-radius: 10px; padding: 8px 14px; display:inline-flex; align-items:center; }
+        .logo-chip img { height: 46px; display:block; }
+        .logo-chip .logo-fallback { font-family:'Roboto Flex',sans-serif; font-weight:800; font-size:1.3rem; color:var(--bc-navy); letter-spacing:-0.01em; }
+
+        /* Hero split: copy left, demo video right */
+        .hero-split { display: grid; grid-template-columns: 1fr 1.05fr; gap: var(--spacing-12); align-items: center; text-align: left; }
+        .hero-split > * { min-width: 0; }
+        .hero-split h1 { font-size: 2.6rem !important; margin-left: 0 !important; margin-right: 0 !important; }
+        .hero-split .subhead { font-size: 1.05rem !important; margin: var(--spacing-4) 0 var(--spacing-8) !important; }
+        .hero-split .cta-buttons { justify-content: flex-start; }
+        .hero-video h4 { color: var(--bc-white); font-size: 1rem; margin-bottom: 0.6rem; opacity: 0.92; display: flex; align-items: center; gap: 0.5rem; }
+        .hero-video h4 .msi { font-size: 20px; color: var(--bc-green); }
+        .video-container { position: relative; padding-bottom: 80%; height: 0; overflow: hidden; width: 100%; border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: #000; border: 1px solid rgba(255,255,255,0.15); }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .video-caption { font-size: 0.8rem; opacity: 0.7 !important; margin-top: 0.6rem; }
+        @media (max-width: 960px) {
+            .hero-split { grid-template-columns: 1fr; text-align: center; gap: var(--spacing-8); }
+            .hero-split .cta-buttons { justify-content: center; }
+            .hero-video h4 { justify-content: center; }
+        }
+        @media (max-width: 768px) { .hero-split h1 { font-size: 2.1rem !important; } }
+
+        .cta-buttons { display: flex; justify-content: center; gap: var(--spacing-4); flex-wrap: wrap; }
+        .btn { display: inline-block; padding: 0.8rem 1.8rem; border-radius: var(--border-radius); font-weight: 700; text-decoration: none; transition: all var(--transition-speed); border: 2px solid transparent; cursor: pointer; font-size: 1rem; }
+        .btn-primary { background-color: var(--bc-green); border-color: var(--bc-green); color: var(--bc-navy); }
+        .btn-primary:hover { background-color: #21c476; text-decoration: none; }
+        .btn-secondary { background-color: transparent; color: var(--bc-white); border-color: var(--bc-white); }
+        .btn-secondary:hover { background-color: var(--bc-white); color: var(--bc-navy); text-decoration: none; }
+
+        .brief-band { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-4); max-width: 1060px; margin: var(--spacing-12) auto 0; }
+        .brief-card { background-color: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--border-radius); padding: var(--spacing-6) var(--spacing-4); text-align: left; }
+        .brief-card .msi { font-size: 30px; color: var(--bc-green); margin-bottom: 0.6rem; display: block; }
+        .brief-card h4 { color: var(--bc-white); font-size: 1.02rem; margin-bottom: 0.35rem; }
+        .brief-card p { color: var(--bc-white); font-size: 0.82rem; opacity: 0.88; line-height: 1.45; }
+
+        /* Edge band + stack */
+        .edge-band { display: grid; grid-template-columns: auto 1fr; gap: var(--spacing-6); align-items: center; background: var(--bc-navy); color: var(--bc-white); border-radius: var(--border-radius); padding: var(--spacing-6) var(--spacing-8); box-shadow: var(--box-shadow); border-left: 6px solid var(--bc-green); }
+        .edge-band .edge-icon { width: 62px; height: 62px; border-radius: 16px; background: rgba(40,226,137,0.14); display: flex; align-items: center; justify-content: center; }
+        .edge-band .edge-icon .msi { font-size: 34px; color: var(--bc-green); }
+        .edge-band h3 { color: var(--bc-white); font-size: 1.35rem; margin-bottom: 0.4rem; }
+        .edge-band p { font-size: 0.96rem; opacity: 0.9; margin: 0; }
+        .edge-band p .hl { color: var(--bc-green); font-weight: 700; }
+        .edge-band cite { display: block; font-style: normal; font-size: 0.8rem; color: var(--bc-green); font-weight: 600; margin: -0.2rem 0 0.6rem; }
+        .stack-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--spacing-4); margin-top: var(--spacing-6); }
+        .stack-card { background: var(--bc-white); border: 1px solid #e5e7eb; border-radius: 12px; padding: var(--spacing-4); box-shadow: var(--box-shadow); }
+        .stack-card .st-name { font-family: 'Roboto Flex', sans-serif; font-weight: 800; color: var(--bc-navy); font-size: 1.05rem; }
+        .stack-card .st-role { font-size: 0.8rem; color: #6b7280; margin-bottom: 0.6rem; }
+        .stack-card .st-tag { display: inline-block; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.22rem 0.6rem; border-radius: 9999px; }
+        .stack-card .st-tag.keep { background: #eaf4ff; color: var(--bc-energy-blue); }
+        .stack-card .st-tag.move { background: #e9fbf1; color: #0b7a45; }
+        .stack-card p { font-size: 0.82rem; margin-top: 0.5rem; line-height: 1.45; }
+
+        /* Quotes + compare */
+        .quote-pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-6); margin-bottom: var(--spacing-8); }
+        .quote-pair.single { grid-template-columns: 1fr; max-width: 820px; margin-left: auto; margin-right: auto; }
+        .discovery-quote { background: var(--bc-navy); color: #fff; border-radius: var(--border-radius); padding: var(--spacing-8); position: relative; box-shadow: var(--box-shadow); }
+        .discovery-quote .msi { position: absolute; top: 16px; left: 20px; font-size: 46px; color: rgba(40,226,137,0.35); }
+        .discovery-quote blockquote { font-family: 'Roboto Flex', sans-serif; font-size: 1.2rem; font-weight: 700; line-height: 1.3; color: #fff; padding-left: 2.6rem; }
+        .discovery-quote cite { display: block; margin-top: var(--spacing-4); padding-left: 2.6rem; font-style: normal; font-size: 0.9rem; color: var(--bc-green); font-weight: 600; }
+        .compare { border: 1px solid #e5e7eb; border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--box-shadow); background: var(--bc-white); }
+        .compare-head, .compare-row { display: grid; grid-template-columns: 1fr 1fr; }
+        .compare-head > div { padding: 0.8rem 1.4rem; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; display: flex; align-items: center; gap: 0.4rem; }
+        .compare-head .ch-current { background-color: #fff1e6; color: #b45309; }
+        .compare-head .ch-fix { background-color: #e9fbf1; color: #0b7a45; }
+        .compare-head .msi { font-size: 16px; }
+        .compare-row > div { padding: 0.6rem 1.2rem 0.6rem 2.2rem; font-size: 0.86rem; line-height: 1.45; color: var(--bc-navy); position: relative; border-top: 1px solid #eef0f2; }
+        .compare-row .cc-current { background-color: #fff7f0; }
+        .compare-row .cc-fix { background-color: #f7fdf9; border-left: 1px solid #e5e7eb; }
+        .compare-row .cc-current::before, .compare-row .cc-fix::before { content: ''; position: absolute; left: 1.1rem; top: 0.95rem; width: 8px; height: 8px; border-radius: 50%; }
+        .compare-row .cc-current::before { background-color: var(--bc-orange); }
+        .compare-row .cc-fix::before { background-color: var(--bc-green); }
+
+        /* Business-line tabs */
+        .line-tabs { display: flex; justify-content: center; gap: var(--spacing-2); flex-wrap: wrap; margin-bottom: var(--spacing-8); }
+        .line-tab { font-family: inherit; display: inline-flex; align-items: center; gap: 0.5rem; background: var(--bc-white); border: 2px solid #e5e7eb; border-radius: 9999px; padding: 0.65rem 1.3rem; font-weight: 700; font-size: 0.95rem; color: var(--bc-navy); cursor: pointer; transition: all .25s; }
+        .line-tab .msi { font-size: 20px; color: var(--bc-energy-blue); }
+        .line-tab:hover { border-color: #9cc9ef; }
+        .line-tab.active { background: var(--bc-navy); border-color: var(--bc-navy); color: #fff; box-shadow: 0 8px 20px rgba(10,34,64,0.25); }
+        .line-tab.active .msi { color: var(--bc-green); }
+        .line-panel { background: var(--bc-white); border: 1px solid #e5e7eb; border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden; }
+        .lp-head { background: linear-gradient(135deg, var(--bc-navy), #0d2f5c); color: #fff; padding: 1.3rem 1.8rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .lp-head h3 { color: #fff; margin: 0; font-size: 1.35rem; }
+        .lp-head p { font-size: 0.85rem; opacity: 0.8; margin: 0.2rem 0 0; }
+        .lp-chip { background: rgba(40,226,137,0.14); border: 1px solid rgba(40,226,137,0.5); color: var(--bc-green); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.35rem 0.8rem; border-radius: 9999px; white-space: nowrap; }
+        .lp-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; padding: 1.6rem 1.2rem 0.6rem; list-style: none; position: relative; }
+        .lp-step { padding: 0 0.6rem; position: relative; text-align: left; }
+        .lp-step .lp-icon { width: 48px; height: 48px; border-radius: 50%; background: #eaf4ff; display: flex; align-items: center; justify-content: center; margin-bottom: 0.7rem; position: relative; z-index: 1; border: 3px solid #fff; box-shadow: 0 0 0 2px #cfe5f8; }
+        .lp-step .lp-icon .msi { font-size: 24px; color: var(--bc-energy-blue); }
+        .lp-step:not(:last-child)::after { content: ''; position: absolute; top: 24px; left: calc(0.6rem + 48px); right: -0.6rem; height: 2px; background: linear-gradient(90deg, #cfe5f8, #e5e7eb); }
+        .lp-step .lp-n { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bc-energy-blue); }
+        .lp-step h4 { font-size: 1rem; margin: 0.15rem 0 0.35rem; }
+        .lp-step p { font-size: 0.84rem; line-height: 1.45; color: #374151; }
+        .lp-step.qa .lp-icon { background: #e9fbf1; box-shadow: 0 0 0 2px #9be8c3; }
+        .lp-step.qa .lp-icon .msi { color: #0b7a45; }
+        .lp-note { margin: 1rem 1.8rem 1.6rem; background: #f0fdf6; border: 1px solid #b9f3d6; border-radius: 10px; padding: 0.8rem 1.1rem; font-size: 0.9rem; color: var(--bc-navy); font-weight: 600; display: flex; gap: 0.5rem; align-items: flex-start; }
+        .lp-note .msi { font-size: 19px; color: #0b7a45; flex-shrink: 0; margin-top: 1px; }
+        .lines-foot { text-align: center; font-size: 0.85rem; color: #6b7280; margin-top: var(--spacing-4); }
+
+        /* Feature hub */
+        .features-layout { display: grid; grid-template-columns: 1fr 1.1fr; gap: var(--spacing-8); align-items: center; }
+        .features-layout > * { min-width: 0; }
+        #feature-display { background-color: var(--bc-white); border: 1px solid #e5e7eb; border-radius: var(--border-radius); padding: var(--spacing-8); min-height: 320px; display: flex; flex-direction: column; justify-content: center; box-shadow: var(--box-shadow); }
+        #feature-display-content { transition: opacity 0.4s ease-in-out; }
+        #feature-display-content .fd-head { display: flex; align-items: center; gap: var(--spacing-4); margin-bottom: var(--spacing-4); min-width: 0; }
+        #feature-display-content .fd-head .msi { font-size: 40px; color: var(--bc-energy-blue); }
+        #feature-display-content h3 { margin-bottom: 0; font-size: 1.5rem; min-width: 0; overflow-wrap: break-word; }
+        #feature-display-content .fd-desc { font-size: 0.98rem; color: var(--bc-charcoal); }
+        #feature-display-content .fd-you { display: flex; align-items: flex-start; gap: 0.5rem; margin-top: var(--spacing-4); background-color: #f0fdf6; border: 1px solid #b9f3d6; border-radius: 8px; padding: var(--spacing-2) var(--spacing-4); font-size: 0.9rem; color: var(--bc-navy); font-weight: 600; }
+        #feature-display-content .fd-you .msi { font-size: 18px; color: #0b7a45; flex-shrink: 0; margin-top: 2px; }
+        .fd-count { font-size: 0.75rem; color: #9ca3af; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-top: var(--spacing-4); }
+        .platform-hub-container { position: relative; width: 100%; max-width: 560px; aspect-ratio: 1 / 1; margin: auto; }
+        .hub-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 130px; height: 130px; background-color: var(--bc-navy); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; z-index: 10; box-shadow: 0 0 20px rgba(10, 34, 64, 0.5); animation: hub-pulse 2s infinite; text-align: center; padding: 10px; }
+        .hub-center img { max-width: 90px; height: auto; }
+        @keyframes hub-pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 114, 206, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(0, 114, 206, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 114, 206, 0); } }
+        .hub-node { position: absolute; width: 86px; height: 86px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: white; border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease; z-index: 5; padding: 8px; border: 3px solid transparent; }
+        .hub-node.active, .hub-node:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 10px 25px rgba(0, 114, 206, 0.3); border-color: var(--bc-energy-blue); z-index: 20; }
+        .hub-node .msi { font-size: 26px; color: var(--bc-energy-blue); }
+        .hub-node .feature-name { font-size: 9px; font-weight: 600; margin-top: 4px; color: var(--bc-navy); line-height: 1.2; }
+        .hub-line { position: absolute; background-color: #d1d5db; height: 2px; transform-origin: left center; z-index: 1; }
+        .feature-tile-grid { display: none; }
+        @media (max-width: 900px) {
+            .features-layout { grid-template-columns: 1fr; }
+            .platform-hub-container { display: none; }
+            .feature-tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--spacing-2); }
+            .feature-tile { background: white; border: 2px solid #e5e7eb; border-radius: 10px; padding: 0.7rem 0.4rem; text-align: center; cursor: pointer; transition: all 0.25s ease; font-family: inherit; }
+            .feature-tile .msi { font-size: 24px; color: var(--bc-energy-blue); }
+            .feature-tile .feature-name { display: block; font-size: 0.68rem; font-weight: 600; color: var(--bc-navy); margin-top: 4px; line-height: 1.2; overflow-wrap: anywhere; }
+            .feature-tile.active { border-color: var(--bc-energy-blue); box-shadow: 0 4px 12px rgba(0,114,206,0.2); }
+        }
+
+        /* Assurance band (dark) */
+        #assurance { background: linear-gradient(150deg, var(--bc-navy) 0%, #0d2f5c 60%, #0a4a8f 100%); color: var(--bc-white); position: relative; overflow: hidden; }
+        #assurance::before { content: ''; position: absolute; top: -140px; left: -120px; width: 460px; height: 460px; border-radius: 50%; background: radial-gradient(circle, rgba(0,114,206,0.28) 0%, transparent 70%); pointer-events: none; }
+        #assurance .container { position: relative; z-index: 1; }
+        #assurance .section-title h2, #assurance .section-title p { color: var(--bc-white); }
+        #assurance .section-title p { opacity: 0.9; }
+        #assurance .eyebrow { color: var(--bc-green); }
+        .assure-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-6); }
+        .assure-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: var(--border-radius); padding: var(--spacing-6); }
+        .assure-card .ac-head { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.4rem; }
+        .assure-card .ac-head .msi { font-size: 30px; color: var(--bc-green); }
+        .assure-card h3 { color: #fff; font-size: 1.15rem; margin: 0; }
+        .assure-card .ac-q { font-size: 0.82rem; color: rgba(255,255,255,0.6); font-style: italic; margin-bottom: 0.8rem; }
+        .assure-card ul { list-style: none; }
+        .assure-card li { position: relative; padding-left: 1.3rem; font-size: 0.88rem; line-height: 1.45; margin-bottom: 0.5rem; color: rgba(255,255,255,0.92); }
+        .assure-card li::before { content: ''; position: absolute; left: 0; top: 7px; width: 8px; height: 8px; border-radius: 50%; background: var(--bc-green); }
+        .assure-note { display: flex; align-items: flex-start; gap: 0.6rem; margin: var(--spacing-8) auto 0; background-color: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.16); border-radius: 10px; padding: 0.9rem 1.2rem; font-size: 0.9rem; color: #fff; }
+        .assure-note .msi { font-size: 20px; color: var(--bc-green); flex-shrink: 0; margin-top: 1px; }
+
+        /* Case studies */
+        .cs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-6); }
+        .cs-card { background: linear-gradient(150deg, #061a33, var(--bc-navy) 60%, #0a3a70); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(10,34,64,.22); transition: transform .35s, box-shadow .35s; }
+        .cs-card:hover { transform: translateY(-6px); box-shadow: 0 28px 70px rgba(10,34,64,.30); }
+        .cs-thumb { position: relative; height: 190px; overflow: hidden; background: var(--bc-navy); }
+        .cs-thumb.noimg { background: linear-gradient(135deg, #0a3a70, var(--bc-energy-blue)); }
+        .cs-thumb > img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+        .cs-card:hover .cs-thumb > img { transform: scale(1.06); }
+        .cs-thumb::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,34,64,0) 30%, rgba(6,20,40,.92) 100%); z-index: 1; }
+        .cs-thumb-overlay { position: absolute; left: 18px; right: 18px; bottom: 16px; z-index: 2; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .cs-logo-chip { background: #fff; border-radius: 9px; padding: 7px 12px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+        .cs-logo-chip img { max-height: 28px; max-width: 130px; object-fit: contain; display: block; }
+        .cs-logo-chip .cs-logo-fallback { font-family: 'Roboto Flex', sans-serif; font-weight: 800; font-size: 1.05rem; color: var(--bc-navy); }
+        .cs-industry { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--bc-green); }
+        .cs-body { padding: var(--spacing-6); display: flex; flex-direction: column; flex: 1; }
+        .cs-stats { display: flex; margin-bottom: var(--spacing-4); }
+        .cs-stat { flex: 1; text-align: center; padding: 0 6px; border-right: 1px solid rgba(255,255,255,.12); }
+        .cs-stat:last-child { border-right: none; }
+        .cs-stat .n { font-family: 'Roboto Flex', sans-serif; font-weight: 800; font-size: 1.9rem; line-height: 1.05; background: linear-gradient(135deg, var(--bc-green), #5ad1ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .cs-stat .l { font-size: 0.66rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 5px; line-height: 1.3; }
+        .cs-why { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #5ad1ff; margin-bottom: 0.4rem; }
+        .cs-quote { font-size: 0.9rem; color: rgba(255,255,255,.8); line-height: 1.6; flex: 1; margin-bottom: var(--spacing-4); }
+        .cs-who { font-size: 0.8rem; font-weight: 700; color: #fff; padding-top: var(--spacing-4); border-top: 1px solid rgba(255,255,255,.12); margin-bottom: var(--spacing-4); }
+        .cs-who span { display: block; font-weight: 500; color: rgba(255,255,255,.5); font-size: 0.75rem; margin-top: 2px; }
+        .cs-link { font-size: 0.82rem; font-weight: 700; color: var(--bc-green); text-decoration: none; margin-top: auto; display: inline-flex; align-items: center; gap: 5px; }
+        .cs-link:hover { text-decoration: underline; }
+
+        /* Next steps + commercials */
+        #next-steps { background-color: var(--bc-navy); color: var(--bc-white); }
+        .next-steps-card { background-color: var(--bc-white); color: var(--bc-charcoal); border-radius: var(--border-radius); padding: var(--spacing-8); max-width: 900px; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-top: 6px solid var(--bc-energy-blue); }
+        .next-steps-card h3 { color: var(--bc-navy); font-size: 1.8rem; margin-bottom: var(--spacing-4); }
+        .next-steps-card > p.lead { font-size: 1.05rem; margin-bottom: var(--spacing-6); }
+        .price-card { display: grid; grid-template-columns: auto 1fr; gap: var(--spacing-6); align-items: center; border: 2px solid var(--bc-green); background: #f5fdf9; border-radius: var(--border-radius); padding: var(--spacing-6); }
+        .price-card .pc-big { text-align: center; background: var(--bc-navy); color: #fff; border-radius: 12px; padding: 1rem 1.4rem; }
+        .price-card .pc-big .pc-from { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bc-green); }
+        .price-card .pc-big .pc-amt { font-family: 'Roboto Flex', sans-serif; font-size: 2.3rem; font-weight: 800; line-height: 1.05; }
+        .price-card .pc-big .pc-unit { font-size: 0.78rem; opacity: 0.75; }
+        .price-card h4 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .price-card p { font-size: 0.9rem; margin: 0; }
+        .incl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem 1.5rem; list-style: none; margin: var(--spacing-6) 0 0; }
+        .incl-grid li { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.9rem; }
+        .incl-grid li .msi { font-size: 19px; color: #0b7a45; flex-shrink: 0; margin-top: 1px; }
+        .price-note { font-size: 0.82rem; color: #6b7280; margin-top: var(--spacing-4); }
+        .step-list { counter-reset: step; list-style: none; margin: 0.5rem 0 0; }
+        .step-list li { position: relative; padding-left: 3rem; margin-bottom: var(--spacing-4); font-size: 1rem; }
+        .step-list li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: -2px; width: 2rem; height: 2rem; border-radius: 50%; background-color: var(--bc-energy-blue); color: var(--bc-white); font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; }
+        .step-list li .when { display: inline-block; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #0b7a45; background: #e9fbf1; padding: 0.1rem 0.5rem; border-radius: 9999px; margin-left: 0.4rem; vertical-align: middle; }
+
+        footer { background-color: var(--bc-navy); color: var(--bc-light-grey); padding: var(--spacing-8) 0 var(--spacing-12); font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.08); }
+
+        /* Reveal */
+        .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease-out, transform .7s ease-out; }
+        .reveal.visible { opacity: 1; transform: none; }
+        .line-tab:focus-visible, .hub-node:focus-visible, .feature-tile:focus-visible { outline: 3px solid var(--bc-green); outline-offset: 2px; }
+
+        @media (max-width: 1024px) {
+            .brief-band { grid-template-columns: repeat(2, 1fr); }
+            .stack-grid { grid-template-columns: repeat(2, 1fr); }
+            .lp-steps { grid-template-columns: 1fr; gap: 1rem; padding: 1.4rem 1.6rem 0.4rem; }
+            .lp-step { display: grid; grid-template-columns: 48px 1fr; column-gap: 1rem; padding: 0; }
+            .lp-step .lp-icon { grid-row: span 3; margin: 0; }
+            .lp-step:not(:last-child)::after { top: 52px; left: 23px; right: auto; width: 2px; height: calc(100% - 40px); background: #e5e7eb; }
+            .assure-grid { grid-template-columns: 1fr; }
+            .cs-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            #hero h1 { font-size: 2.1rem; }
+            h2 { font-size: 1.7rem; }
+            section { padding: var(--spacing-12) 0; }
+            #sticky-nav .nav-links a:not(.nav-cta) { display: none; }
+            .brief-band { grid-template-columns: 1fr; }
+            .edge-band { grid-template-columns: 1fr; padding: var(--spacing-6); }
+            .quote-pair { grid-template-columns: 1fr; }
+            .compare-head, .compare-row { grid-template-columns: 1fr; }
+            .compare-row .cc-fix { border-left: none; }
+            .price-card { grid-template-columns: 1fr; }
+            .incl-grid { grid-template-columns: 1fr; }
+            #feature-display { padding: var(--spacing-6) var(--spacing-4); }
+            .next-steps-card { padding: var(--spacing-6); }
+        }
+        @media (max-width: 560px) { .stack-grid { grid-template-columns: 1fr; } }
+
+        /* ===== Shared additions ===== */
+        .msi { width: 1em; overflow: hidden; flex-shrink: 0; }
+        .j-nav { flex-wrap: wrap; }
+        .logo-chip img { height: 52px; }
+        .stack-card .st-tag.check { background: #fff4e5; color: #b45309; }
+
+        /* Recording chapters dropdown */
+        .chapters { margin-top: 0.7rem; text-align: left; }
+        .chapters summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 700; color: var(--bc-green); padding: 0.35rem 0.8rem; border: 1px solid rgba(40,226,137,0.45); border-radius: 9999px; background: rgba(40,226,137,0.08); }
+        .chapters summary::-webkit-details-marker { display: none; }
+        .chapters summary .msi { font-size: 18px; transition: transform .25s; }
+        .chapters[open] summary .msi { transform: rotate(180deg); }
+        .chapters ol { list-style: none; margin-top: 0.6rem; background: rgba(6,20,40,0.6); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 0.5rem 0.8rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.15rem 1rem; }
+        .chapters li { font-size: 0.8rem; color: rgba(255,255,255,0.88); display: flex; gap: 0.55rem; padding: 0.22rem 0; }
+        .chapters li b { font-variant-numeric: tabular-nums; color: var(--bc-green); font-weight: 700; min-width: 2.6rem; }
+        .chapters .ch-note { font-size: 0.72rem; color: rgba(255,255,255,0.55); margin-top: 0.4rem; }
+
+        /* Journey click-through */
+        #journey { background-color: var(--bc-light-grey); }
+        .journey { background: var(--bc-white); border: 1px solid #e5e7eb; border-radius: 18px; box-shadow: 0 20px 50px rgba(10,34,64,0.10); overflow: hidden; }
+        .j-banner { position: relative; padding: 1.6rem 2rem; color: #fff; background: linear-gradient(100deg, rgba(10,34,64,0.96) 0%, rgba(10,34,64,0.88) 55%, rgba(10,34,64,0.55) 100%), var(--bc-navy); display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .j-banner h3 { color: #fff; margin: 0; font-size: 1.3rem; }
+        .j-banner p { margin: 0.2rem 0 0; font-size: 0.88rem; opacity: 0.85; }
+        .j-banner .lp-chip { background: rgba(40,226,137,0.18); }
+        .j-steps { display: grid; grid-template-columns: repeat(7, 1fr); list-style: none; padding: 1.6rem 1.2rem 0.4rem; position: relative; }
+        .j-track { position: absolute; top: calc(1.6rem + 23px); left: calc(1.2rem + 7.14%); right: calc(1.2rem + 7.14%); height: 3px; background: #e5e7eb; border-radius: 3px; }
+        .j-track span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--bc-energy-blue), var(--bc-green)); border-radius: 3px; transition: width .45s ease; }
+        .j-step { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.45rem; background: none; border: none; font-family: inherit; cursor: pointer; padding: 0 0.25rem; }
+        .j-dot { width: 48px; height: 48px; border-radius: 50%; background: #fff; border: 3px solid #d1d5db; display: flex; align-items: center; justify-content: center; transition: all .3s; }
+        .j-dot .msi { font-size: 22px; color: #9ca3af; transition: color .3s; }
+        .j-step .j-lab { font-size: 0.78rem; font-weight: 700; color: #6b7280; line-height: 1.25; }
+        .j-step .j-who { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9ca3af; }
+        .j-step.done .j-dot { border-color: var(--bc-energy-blue); background: #eaf4ff; }
+        .j-step.done .j-dot .msi { color: var(--bc-energy-blue); }
+        .j-step.active .j-dot { border-color: var(--bc-green); background: var(--bc-navy); transform: scale(1.12); box-shadow: 0 8px 20px rgba(10,34,64,0.25); }
+        .j-step.active .j-dot .msi { color: var(--bc-green); }
+        .j-step.active .j-lab { color: var(--bc-navy); }
+        .j-step:hover .j-dot { border-color: var(--bc-energy-blue); }
+        .j-step:focus-visible { outline: 3px solid var(--bc-green); outline-offset: 4px; border-radius: 10px; }
+        .j-panel { padding: 1.2rem 2rem 1.8rem; }
+        .j-panel-inner { transition: opacity .3s ease; }
+        .j-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; border-bottom: 1px solid #eef0f2; padding-bottom: 0.9rem; margin-bottom: 1.1rem; }
+        .j-head h3 { margin: 0; font-size: 1.45rem; }
+        .j-head .j-num { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bc-energy-blue); display: block; margin-bottom: 0.15rem; }
+        .j-whochip { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 800; padding: 0.4rem 0.9rem; border-radius: 9999px; background: #eaf4ff; color: var(--bc-energy-blue); }
+        .j-whochip .msi { font-size: 17px; }
+        .j-whochip.cust { background: #fff4e5; color: #b45309; }
+        .j-whochip.sub { background: #e9fbf1; color: #0b7a45; }
+        .j-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+        .j-col { border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem 1.2rem; }
+        .j-col h4 { display: flex; align-items: center; gap: 0.45rem; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.6rem; color: var(--bc-navy); }
+        .j-col h4 .msi { font-size: 19px; color: var(--bc-energy-blue); }
+        .j-col.field h4 .msi { color: #0b7a45; }
+        .j-col ul { list-style: none; }
+        .j-col li { position: relative; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.45; margin-bottom: 0.45rem; color: #374151; }
+        .j-col li::before { content: ''; position: absolute; left: 0; top: 0.5rem; width: 7px; height: 7px; border-radius: 50%; background: var(--bc-energy-blue); }
+        .j-col.field li::before { background: var(--bc-green); }
+        .j-panel .lp-note { margin: 1.1rem 0 0; }
+        .j-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.2rem; gap: 1rem; }
+        .j-btn { font-family: inherit; display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 700; font-size: 0.9rem; padding: 0.55rem 1.1rem; border-radius: 9999px; border: 2px solid #e5e7eb; background: #fff; color: var(--bc-navy); cursor: pointer; transition: all .25s; }
+        .j-btn:hover:not(:disabled) { border-color: var(--bc-energy-blue); }
+        .j-btn.next { background: var(--bc-navy); border-color: var(--bc-navy); color: #fff; }
+        .j-btn.next .msi { color: var(--bc-green); }
+        .j-btn:disabled { opacity: 0.4; cursor: default; }
+        .j-btn .msi { font-size: 18px; }
+        .j-count { font-size: 0.78rem; color: #9ca3af; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+        /* Assurance: 2x2 */
+        .assure-grid.four { grid-template-columns: repeat(2, 1fr); }
+
+        /* Confirm list in next steps */
+        .confirm-box { margin-top: var(--spacing-8); background: var(--bc-light-grey); border-radius: 12px; padding: 1.2rem 1.4rem; }
+        .confirm-box h4 { font-size: 1rem; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.45rem; }
+        .confirm-box h4 .msi { font-size: 20px; color: var(--bc-energy-blue); }
+        .confirm-box ul { list-style: none; }
+        .confirm-box li { position: relative; padding-left: 1.3rem; font-size: 0.92rem; margin-bottom: 0.4rem; }
+        .confirm-box li::before { content: ''; position: absolute; left: 0; top: 0.55rem; width: 8px; height: 8px; border-radius: 50%; background: var(--bc-energy-blue); }
+
+        @media (max-width: 1024px) {
+            .j-steps { grid-template-columns: repeat(4, 1fr); row-gap: 1.2rem; }
+            .j-track { display: none; }
+            .assure-grid.four { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .j-steps { grid-template-columns: repeat(3, 1fr); padding: 1.2rem 0.8rem 0.2rem; }
+            .j-panel { padding: 1rem 1.2rem 1.4rem; }
+            .j-cols { grid-template-columns: 1fr; }
+            .j-banner { padding: 1.3rem 1.2rem; }
+            .chapters ol { grid-template-columns: 1fr; }
+        }
+
+        /* ===== TGA additions ===== */
+        #heard { background-color: var(--bc-white); }
+        #journey { background-color: var(--bc-light-grey); }
+        #case-studies { background-color: var(--bc-light-grey); }
+        .logo-chip img { height: 56px; }
+        .brief-band { margin-top: var(--spacing-12); }
+        .brief-card .n { font-family: 'Roboto Flex', sans-serif; font-weight: 800; font-size: 1.7rem; line-height: 1.1; color: var(--bc-white); margin-bottom: 0.2rem; }
+        .brief-card .n small { font-size: 0.9rem; opacity: 0.75; font-weight: 700; }
+        .stack-grid { grid-template-columns: repeat(6, 1fr); }
+        .stack-card .st-tag.later { background: #f3f0ff; color: #5b3fc4; }
+
+        .keep-strip { margin-top: var(--spacing-8); background: #f0fdf6; border: 1px solid #b9f3d6; border-radius: var(--border-radius); padding: 1.1rem 1.4rem; display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; }
+        .keep-strip .ks-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #0b7a45; display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
+        .keep-strip .ks-label .msi { font-size: 18px; }
+        .keep-strip ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .keep-strip li { background: #fff; border: 1px solid #b9f3d6; border-radius: 9999px; padding: 0.3rem 0.85rem; font-size: 0.84rem; font-weight: 600; color: var(--bc-navy); }
+
+        /* Investment: invoice card */
+        .inv-intro { display: grid; grid-template-columns: 1fr auto; gap: 1.2rem; align-items: center; margin-bottom: var(--spacing-6); }
+        .inv-quote { border-left: 4px solid var(--bc-green); padding: 0.2rem 0 0.2rem 1rem; font-size: 0.95rem; color: #374151; font-style: italic; }
+        .inv-quote cite { display: block; font-style: normal; font-size: 0.8rem; font-weight: 700; color: var(--bc-energy-blue); margin-top: 0.3rem; }
+        .invoice { border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; box-shadow: var(--box-shadow); }
+        .inv-head { background: linear-gradient(135deg, var(--bc-navy), #0d2f5c); color: #fff; padding: 1rem 1.4rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .inv-head h4 { color: #fff; margin: 0; font-size: 1.1rem; }
+        .inv-head p { margin: 0.15rem 0 0; font-size: 0.8rem; opacity: 0.75; }
+        .inv-row { display: grid; grid-template-columns: 3rem 1fr auto auto; gap: 1rem; align-items: center; padding: 0.85rem 1.4rem; border-top: 1px solid #eef0f2; font-size: 0.9rem; }
+        .inv-row.th { border-top: none; background: var(--bc-light-grey); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; padding-top: 0.6rem; padding-bottom: 0.6rem; }
+        .inv-row .q { font-family: 'Roboto Flex', sans-serif; font-weight: 800; font-size: 1.15rem; color: var(--bc-energy-blue); }
+        .inv-row .d strong { display: block; color: var(--bc-navy); }
+        .inv-row .d span { font-size: 0.8rem; color: #6b7280; }
+        .inv-row .u, .inv-row .t { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .inv-row .u s { color: #9ca3af; font-size: 0.78rem; margin-right: 0.3rem; }
+        .inv-row .t { font-weight: 700; color: var(--bc-navy); min-width: 6.5rem; }
+        .inv-total { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 1.1rem 1.4rem; background: #f5fdf9; border-top: 2px solid var(--bc-green); }
+        .inv-total .lab { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #0b7a45; }
+        .inv-total .amt { font-family: 'Roboto Flex', sans-serif; font-weight: 800; font-size: 2rem; color: var(--bc-navy); line-height: 1; }
+        .inv-total .amt small { font-size: 0.85rem; color: #6b7280; font-weight: 600; }
+        .inv-cta { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: var(--spacing-6); }
+        .btn-navy { background: var(--bc-navy); color: #fff; border-color: var(--bc-navy); display: inline-flex; align-items: center; gap: 0.45rem; }
+        .btn-navy .msi { color: var(--bc-green); font-size: 20px; }
+        .btn-navy:hover { background: #0d2f5c; text-decoration: none; }
+
+        .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-4); margin-top: var(--spacing-8); }
+        .faq { background: var(--bc-light-grey); border-radius: 12px; padding: 1rem 1.2rem; }
+        .faq h5 { font-family: 'Roboto Flex', sans-serif; font-size: 0.98rem; color: var(--bc-navy); margin-bottom: 0.35rem; display: flex; gap: 0.45rem; align-items: center; }
+        .faq h5 .msi { font-size: 19px; color: var(--bc-energy-blue); }
+        .faq p { font-size: 0.87rem; line-height: 1.5; color: #374151; }
+
+        .contact-strip { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: var(--spacing-8); padding-top: var(--spacing-6); border-top: 1px solid #e5e7eb; }
+        .contact-strip .who { font-weight: 800; color: var(--bc-navy); font-family: 'Roboto Flex', sans-serif; font-size: 1.05rem; }
+        .contact-strip .who span { display: block; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.8rem; color: #6b7280; }
+        .contact-strip a { display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 700; font-size: 0.9rem; background: #eaf4ff; padding: 0.45rem 0.9rem; border-radius: 9999px; }
+        .contact-strip a .msi { font-size: 18px; }
+        .contact-strip a:hover { text-decoration: none; background: #d6eaff; }
+
+        @media (max-width: 1024px) {
+            .stack-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .keep-strip { grid-template-columns: 1fr; }
+            .faq-grid { grid-template-columns: 1fr; }
+            .inv-intro { grid-template-columns: 1fr; }
+            .inv-row { grid-template-columns: 2.2rem 1fr auto; }
+            .inv-row .u { display: none; }
+            .inv-row.th .u { display: none; }
+        }
+        @media (max-width: 560px) { .stack-grid { grid-template-columns: 1fr 1fr; } }
+
+        /* ===== Restructure ===== */
+        #heard { background-color: var(--bc-white); }
+        #case-studies { background-color: var(--bc-light-grey); }
+        #journey { background-color: var(--bc-white); }
+        #features { background-color: var(--bc-light-grey); }
+        #investment { background-color: var(--bc-white); }
+        #investment .next-steps-card { box-shadow: 0 20px 50px rgba(10,34,64,0.12); border: 1px solid #e5e7eb; border-top: 6px solid var(--bc-energy-blue); }
+        .brief-band.light { margin: 0 auto var(--spacing-8); max-width: none; }
+        .brief-band.light .brief-card { background: linear-gradient(150deg, var(--bc-navy), #0d2f5c); border-color: transparent; box-shadow: var(--box-shadow); }
+        .systems-wrap { margin-top: var(--spacing-16); }
+        .systems-title { text-align: center; font-size: 1.6rem; margin-bottom: var(--spacing-6); }
+        .systems-wrap .stack-card { background: var(--bc-white); }
+    </style>
+</head>
+<body>
+    <nav id="sticky-nav">
+        <div class="container">
+            <div class="nav-brand" style="display:flex; align-items:center; gap:0.7rem;">
+                <img src="https://i.postimg.cc/ydbgqXFm/Big-Change-White.png" alt="BigChange Logo">
+                <span style="color:rgba(255,255,255,0.45); font-weight:700;">+</span>
+                <span style="background:#fff; border-radius:6px; padding:2px 4px; display:inline-flex; align-items:center;"><img src="https://www.independentliving.co.uk/wp-content/uploads/2023/01/TGA-NEW-500x500.jpg" alt="TGA Mobility Logo" style="height:26px; display:block;" onerror="this.parentElement.style.display='none';"></span>
+            </div>
+            <div class="nav-links">
+                <a href="#heard">What we heard</a>
+                <a href="#case-studies">Proof</a>
+                <a href="#journey">One repair</a>
+                <a href="#features">The platform</a>
+                <a href="#next-steps">Next steps</a>
+                <a href="#investment" class="nav-cta">Investment</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section id="hero">
+            <div class="container">
+                
+                <div class="hero-split">
+                    <div class="hero-copy">
+                        <div class="hero-pill"><span class="live-dot"></span> Prepared for Michelle, Jim &amp; the TGA Mobility service team</div>
+
+                        <h1>Six engineers. England and Wales. A schedule that lives in one person&rsquo;s head. <span class="hero-accent">Let&rsquo;s put it in the system.</span></h1>
+                        <p class="subhead">Today every repair is placed by hand: check each Outlook calendar, remember who&rsquo;s near that postcode, route the day in Google Maps. BigChange does that part for you. It shows who&rsquo;s next in the area and what it costs to send them, then puts the job, the job sheet and the route on their iPhone.</p>
+
+                        <div class="cta-buttons">
+                            <a href="#journey" class="btn btn-primary">Follow one repair through</a>
+                            <a href="#investment" class="btn btn-secondary">Investment &amp; next steps</a>
+                        </div>
+                    </div>
+                    <div class="hero-video">
+                        <h4><span class="msi">play_circle</span> Watch the demo again</h4>
+                        <div class="video-container">
+                            <iframe src="https://copilot.clari.com/guest/sharedCall/6ae48dc46b526d2e15ecdc3e?callId=9364caf9-4e2f-47c6-9eb2-a4ec349b1b64&amp;callTitle=BigChange%20Demonstration%20for%20TGA%20Mobility" title="BigChange Demonstration for TGA Mobility" webkitallowfullscreen mozallowfullscreen allowfullscreen loading="lazy"></iframe>
+                        </div>
+                        <details class="chapters">
+                            <summary>What&rsquo;s in the recording <span class="msi">expand_more</span></summary>
+                            <ol>
+                                <li><b>02:48</b> How scheduling works today</li>
+                                <li><b>12:00</b> How BigChange works day to day</li>
+                                <li><b>16:06</b> The engineer app</li>
+                                <li><b>18:36</b> Vehicle checks and fleet</li>
+                                <li><b>24:13</b> Optimised routes</li>
+                                <li><b>25:51</b> Live map and tracking</li>
+                                <li><b>28:46</b> Tracking and Trackmate</li>
+                                <li><b>31:22</b> CRM and site history</li>
+                                <li><b>33:22</b> Motability SLAs and priorities</li>
+                                <li><b>42:45</b> The schedule</li>
+                                <li><b>46:03</b> Bulk-scheduling services</li>
+                                <li><b>48:32</b> Working hours and skills</li>
+                                <li><b>50:26</b> Timesheets vs tracking</li>
+                                <li><b>53:21</b> AI reporting</li>
+                                <li><b>56:37</b> Annual service reminders</li>
+                                <li><b>57:48</b> A repair, start to finish</li>
+                                <li><b>59:44</b> Who&rsquo;s best to send</li>
+                                <li><b>01:06:00</b> ETAs and tracking links</li>
+                                <li><b>01:07:26</b> On site: risk assessment and voice notes</li>
+                                <li><b>01:10:40</b> Payments and invoicing</li>
+                                <li><b>01:16:11</b> Pricing</li>
+                            </ol>
+                            <p class="ch-note">Times are approximate. Scrub to them in the player.</p>
+                        </details>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="heard">
+            <div class="container">
+                <div class="section-title">
+                    <span class="eyebrow">What we heard</span>
+                    <h2>Where the time goes today, and what changes</h2>
+                </div>
+
+                <div class="compare">
+                    <div class="compare-head">
+                        <div class="ch-current"><span class="msi">warning</span> Today</div>
+                        <div class="ch-fix"><span class="msi">bolt</span> With BigChange</div>
+                    </div>
+                    <div class="compare-row">
+                        <div class="cc-current"><strong>Every job is placed by hand.</strong> Check the calendars, work out who&rsquo;s nearby, route it in Google Maps.</div>
+                        <div class="cc-fix"><strong>The scheduling assistant finds who&rsquo;s next in the area,</strong> with <mark class="hl-g">the miles and cost of each option</mark>.</div>
+                    </div>
+                    <div class="compare-row">
+                        <div class="cc-current"><strong>Motability call-outs, warranty jobs and annual services</strong> compete for the same diaries, prioritised case by case.</div>
+                        <div class="cc-fix"><strong>Priorities and response times set by contract and job type,</strong> so <mark class="hl-g">urgent work is anchored first</mark>.</div>
+                    </div>
+                    <div class="compare-row">
+                        <div class="cc-current"><strong>Paper job sheets,</strong> created in Sugar, picked, then passed back for scheduling.</div>
+                        <div class="cc-fix"><strong>The job sheet is on the engineer&rsquo;s iPhone.</strong> Photos, signatures and a <mark class="hl-g">report made on completion</mark>.</div>
+                    </div>
+                    <div class="compare-row">
+                        <div class="cc-current"><strong>Customers ring to ask</strong> when the engineer will arrive, and the office rings the engineer.</div>
+                        <div class="cc-fix"><strong>Live ETAs on the schedule,</strong> and an optional <mark class="hl-g">tracking link for the customer</mark>.</div>
+                    </div>
+                    <div class="compare-row">
+                        <div class="cc-current"><strong>Timesheets and tracker data don&rsquo;t always tally,</strong> and checking means two systems.</div>
+                        <div class="cc-fix"><strong>A weekly report compares them</strong> and <mark class="hl-g">flags the gaps for you</mark>.</div>
+                    </div>
+                    <div class="compare-row">
+                        <div class="cc-current"><strong>Annual services are tracked separately</strong> and fitted around the breakdowns.</div>
+                        <div class="cc-fix"><strong>Services come back round automatically when due,</strong> and a month&rsquo;s worth can be <mark class="hl-g">scheduled in one go</mark>.</div>
+                    </div>
+                </div>
+
+                <div class="keep-strip">
+                    <div class="ks-label"><span class="msi">check_circle</span> Stays as it is</div>
+                    <ul>
+                        <li>All-day slots for customers</li>
+                        <li>Engineers choose their own job order</li>
+                        <li>Your holiday system (we switch ours off)</li>
+                        <li>Your job sheet questions</li>
+                        <li>Dimensions for accounts and stock</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="case-studies">
+            <div class="container">
+                <div class="section-title">
+                    <span class="eyebrow">Proof from businesses like yours</span>
+                    <h2>Manufacturers with national service teams, already on BigChange</h2>
+                    <p>Not mobility scooters, but the same shape of business: they make or supply the equipment, then send engineers across the country to service and repair it.</p>
+                </div>
+                <div class="cs-grid">
+                    <div class="cs-card">
+                        <div class="cs-thumb">
+                            <img src="https://cdn.prod.website-files.com/652e90c1583f67a8de233f2d/67da9d4b6d37cdd4f62de7e6_Brendeck.jpeg" alt="Brendeck vehicle wash equipment" onerror="this.onerror=null; this.style.display='none'; this.parentElement.classList.add('noimg');">
+                            <div class="cs-thumb-overlay">
+                                <span class="cs-logo-chip">
+                                    <img src="https://publicprocurementonline.com/wp-content/uploads/2018/09/logo-7.jpg" alt="Brendeck Logo" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                    <span class="cs-logo-fallback" style="display:none;">Brendeck</span>
+                                </span>
+                                <span class="cs-industry">Makes &amp; services vehicle washers</span>
+                            </div>
+                        </div>
+                        <div class="cs-body">
+                            <div class="cs-stats">
+                                <div class="cs-stat"><div class="n">14</div><div class="l">Engineers</div></div>
+                                <div class="cs-stat"><div class="n">Same day</div><div class="l">Return visits, was 2 days</div></div>
+                                <div class="cs-stat"><div class="n">0</div><div class="l">Paper</div></div>
+                            </div>
+                            <div class="cs-why">Why it&rsquo;s relevant</div>
+                            <div class="cs-quote">They build their own equipment and service it nationwide: planned maintenance plus ad hoc repairs. With live tracking and job reporting, an engineer can usually get back the same day. &ldquo;When we get calls asking &lsquo;where is the engineer?&rsquo; we can respond straight away.&rdquo;</div>
+                            <div class="cs-who">Linda Clarke<span>Finance &amp; Operations Director, Brendeck</span></div>
+                            <a href="https://www.bigchange.com/success-stories/bigchange-helps-vehicle-wash-industry-leader-brendeck-to-go-completely-paperless" target="_blank" rel="noopener" class="cs-link">Read the case study &rarr;</a>
+                        </div>
+                    </div>
+                    <div class="cs-card">
+                        <div class="cs-thumb">
+                            <img src="https://cdn.prod.website-files.com/652e90c1583f67a8de233f2d/66fffeeb4d5786eb8ce0b009_65aec09892df8270942804b2_65a102b66e47b650525db4b6_BigChange_DW_05760a_1200pix.webp" alt="DW Forklift Services engineer" onerror="this.onerror=null; this.style.display='none'; this.parentElement.classList.add('noimg');">
+                            <div class="cs-thumb-overlay">
+                                <span class="cs-logo-chip">
+                                    <img src="http://dwforklifts.co.uk/images/dwloftlifts.png" alt="DW Forklift Services Logo" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                    <span class="cs-logo-fallback" style="display:none;">DW Forklift</span>
+                                </span>
+                                <span class="cs-industry">Forklift servicing &amp; repairs</span>
+                            </div>
+                        </div>
+                        <div class="cs-body">
+                            <div class="cs-stats">
+                                <div class="cs-stat"><div class="n">4h&rarr;1h</div><div class="l">Admin a day</div></div>
+                                <div class="cs-stat"><div class="n">0</div><div class="l">Extra hires needed</div></div>
+                                <div class="cs-stat"><div class="n">1</div><div class="l">System, tracking included</div></div>
+                            </div>
+                            <div class="cs-why">Why it&rsquo;s relevant</div>
+                            <div class="cs-quote">Mobile engineers servicing equipment on customers&rsquo; sites, previously run on paper. Quoting, job cards and scheduling dropped from up to four hours a day to one, so they didn&rsquo;t take on the extra admin person they&rsquo;d planned. Built-in tracking replaced their separate supplier. &ldquo;BigChange has already paid for itself.&rdquo;</div>
+                            <div class="cs-who">Darren Walker<span>Managing Director &amp; Founder, DW Forklift Services</span></div>
+                            <a href="https://www.bigchange.com/success-stories/bigchange-raises-service-standards-for-dw-forklift" target="_blank" rel="noopener" class="cs-link">Read the case study &rarr;</a>
+                        </div>
+                    </div>
+                    <div class="cs-card">
+                        <div class="cs-thumb">
+                            <img src="https://cdn.prod.website-files.com/652e90c1583f67a8de233f2d/67da76c0ac80062ccd768d96_AGS%201.jpeg" alt="Gartec platform lift" onerror="this.onerror=null; this.style.display='none'; this.parentElement.classList.add('noimg');">
+                            <div class="cs-thumb-overlay">
+                                <span class="cs-logo-chip">
+                                    <img src="https://gartec.com/wp-content/uploads/2021/03/GARTEC-2012-cmyk.jpg" alt="Gartec Logo" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                                    <span class="cs-logo-fallback" style="display:none;">Gartec</span>
+                                </span>
+                                <span class="cs-industry">Accessibility lifts &middot; supply, install, service</span>
+                            </div>
+                        </div>
+                        <div class="cs-body">
+                            <div class="cs-stats">
+                                <div class="cs-stat"><div class="n">9&rarr;15</div><div class="l">Engineers</div></div>
+                                <div class="cs-stat"><div class="n">+&pound;1m</div><div class="l">Turnover</div></div>
+                                <div class="cs-stat"><div class="n">48h</div><div class="l">To invoice, was 2 weeks</div></div>
+                            </div>
+                            <div class="cs-why">Why it&rsquo;s relevant</div>
+                            <div class="cs-quote">The closest to your world: accessibility equipment, planned servicing plus 24/7 breakdowns with guaranteed response times. Gartec replaced separate service, audit and tracking systems with BigChange. &ldquo;I reckon we are probably twice as efficient when it comes to administration.&rdquo;</div>
+                            <div class="cs-who">Ben Long<span>UK Operations Manager, Gartec</span></div>
+                            <a href="https://www.bigchange.com/success-stories/bigchange-gives-a-lift-to-gartec-business-performance" target="_blank" rel="noopener" class="cs-link">Read the case study &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="journey">
+            <div class="container">
+                <div class="section-title">
+                    <span class="eyebrow">One repair, start to finish</span>
+                    <h2>A scooter breakdown in BigChange</h2>
+                    <p>Click through each stage to see what the office sees and what the engineer sees on their iPhone.</p>
+                </div>
+
+                <div class="journey">
+                    <div class="j-banner">
+                        <div>
+                            <h3>Log &rarr; assign &rarr; confirm &rarr; travel &rarr; arrive &rarr; repair &rarr; report</h3>
+                            <p>Annual services follow the same flow, with a different job sheet.</p>
+                        </div>
+                        <span class="lp-chip">One job folder</span>
+                    </div>
+                    <ol class="j-steps" id="j-steps" role="tablist" aria-label="Repair stages">
+                        <li class="j-track" aria-hidden="true"><span id="j-track-fill"></span></li>
+                    </ol>
+                    <div class="j-panel">
+                        <div class="j-panel-inner" id="j-panel" role="tabpanel" aria-live="polite"></div>
+                        <div class="j-nav">
+                            <button type="button" class="j-btn" id="j-prev"><span class="msi">arrow_back</span> Back</button>
+                            <span class="j-count" id="j-count"></span>
+                            <button type="button" class="j-btn next" id="j-next">Next stage <span class="msi">arrow_forward</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features">
+            <div class="container">
+                <div class="section-title">
+                    <span class="eyebrow">One platform for the office and the vans</span>
+                    <h2>The platform, mapped to your service team</h2>
+                    <p>Click any capability to see what it means for your engineers, your customers and your Motability work.</p>
+                </div>
+
+                <div class="features-layout">
+                    <div id="feature-display">
+                        <div id="feature-display-content"></div>
+                    </div>
+                    <div>
+                        <div id="platform-hub" class="platform-hub-container">
+                            <div class="hub-center"><img src="https://i.postimg.cc/ydbgqXFm/Big-Change-White.png" alt="BigChange"></div>
+                        </div>
+                        <div id="feature-tile-grid" class="feature-tile-grid"></div>
+                    </div>
+                </div>
+
+                <div class="systems-wrap">
+                    <h3 class="systems-title">What happens to your current systems</h3>
+                <div class="edge-band">
+                    <div class="edge-icon"><span class="msi">hub</span></div>
+                    <div>
+                        <h3>&ldquo;We&rsquo;ve been kind of guilty over the years of taking on one system for one thing, one for another, one for another.&rdquo;</h3>
+                        <cite>Jim &middot; during the demo</cite>
+                        <p>So this shouldn&rsquo;t be one more. BigChange puts <span class="hl">scheduling, the engineer app, vehicle tracking, job reports and invoicing in one system</span>. It was founded by the team behind Masternaut, one of Europe&rsquo;s largest tracking companies, so <span class="hl">tracking is built in, not bolted on</span>.</p>
+                    </div>
+                </div>
+
+                <div class="stack-grid">
+                    <div class="stack-card">
+                        <div class="st-name">Outlook calendars</div>
+                        <div class="st-role">One per engineer</div>
+                        <span class="st-tag move">Replaced</span>
+                        <p>One live schedule with travel time between every job.</p>
+                    </div>
+                    <div class="stack-card">
+                        <div class="st-name">Google Maps</div>
+                        <div class="st-role">Routing each day</div>
+                        <span class="st-tag move">Replaced</span>
+                        <p>Routes worked out for you from live traffic and start points.</p>
+                    </div>
+                    <div class="stack-card">
+                        <div class="st-name">Paper job sheets</div>
+                        <div class="st-role">Printed and filled in by hand</div>
+                        <span class="st-tag move">Replaced</span>
+                        <p>Digital job sheets on the engineer&rsquo;s iPhone.</p>
+                    </div>
+                    <div class="stack-card">
+                        <div class="st-name">Trackmate</div>
+                        <div class="st-role">Trackers and dashcams</div>
+                        <span class="st-tag check">To review</span>
+                        <p>Hard-wired tracking is in the quote. We&rsquo;ll look at your contract with you.</p>
+                    </div>
+                    <div class="stack-card">
+                        <div class="st-name">Sugar CRM</div>
+                        <div class="st-role">Where job sheets start</div>
+                        <span class="st-tag later">Phase two</span>
+                        <p>Service jobs run in BigChange. Linking systems is a later conversation.</p>
+                    </div>
+                    <div class="stack-card">
+                        <div class="st-name">Dimensions</div>
+                        <div class="st-role">Accounts and stock, by Access</div>
+                        <span class="st-tag keep">Stays</span>
+                        <p>Your ledger and warehouse stock stay where they are.</p>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="investment">
+            <div class="container">
+                <div class="next-steps-card">
+                    <span class="eyebrow">Investment</span>
+                    <h3>Your quotation</h3>
+
+                    <div class="invoice">
+                        <div class="inv-head">
+                            <div>
+                                <h4>TGA Mobility &middot; Service team</h4>
+                                <p>Monthly, ex VAT &middot; 36-month term</p>
+                            </div>
+                        </div>
+                        <div class="inv-row th"><span>Qty</span><span>Item</span><span class="u">Unit</span><span class="t">Monthly</span></div>
+                        <div class="inv-row">
+                            <span class="q">5</span>
+                            <span class="d"><strong>Back-office web users</strong><span>Scheduling, CRM, reporting and invoicing</span></span>
+                            <span class="u"><s>&pound;70</s>&pound;60.00</span>
+                            <span class="t">&pound;300.00</span>
+                        </div>
+                        <div class="inv-row">
+                            <span class="q">7</span>
+                            <span class="d"><strong>Engineer app with hard-wired vehicle tracking</strong><span>Mobile licence plus tracker, fitting included</span></span>
+                            <span class="u"><s>&pound;70</s>&pound;60.00</span>
+                            <span class="t">&pound;420.00</span>
+                        </div>
+                        <div class="inv-row">
+                            <span class="q">12</span>
+                            <span class="d"><strong>BigChange Lightning upgrade</strong><span>AI voice notes, job summaries, GPS time tracking, two-way customer messaging</span></span>
+                            <span class="u">&pound;10.00</span>
+                            <span class="t">&pound;120.00</span>
+                        </div>
+                        <div class="inv-row">
+                            <span class="q">1</span>
+                            <span class="d"><strong>Premier implementation package</strong><span>Dedicated implementation consultant, spread across the term</span></span>
+                            <span class="u">&pound;133.00</span>
+                            <span class="t">&pound;133.00</span>
+                        </div>
+                        <div class="inv-total">
+                            <span class="lab">Monthly total</span>
+                            <span class="amt">&pound;973.00 <small>/ month ex VAT</small></span>
+                        </div>
+                    </div>
+
+                    <div class="inv-cta">
+                        <a href="https://landing.bigchange.com/9i0AIosm3rQZiW4Tjl9" target="_blank" rel="noopener" class="btn btn-navy"><span class="msi">description</span> View the formal quotation</a>
+                    </div>
+
+                    <div class="faq-grid">
+                        <div class="faq">
+                            <h5><span class="msi">build</span> Do you charge to fit the trackers?</h5>
+                            <p>No. Fitting is included in the licence. Dashcams and devices (tablets, cradles or phones) are optional extras, quoted separately if you want them.</p>
+                        </div>
+                        <div class="faq">
+                            <h5><span class="msi">school</span> What training do we get?</h5>
+                            <p>A dedicated implementation consultant, the same person throughout, with around 15 hours of one-to-one time over Teams. They build the system around your process and import your data. You also get a dedicated account manager.</p>
+                        </div>
+                        <div class="faq">
+                            <h5><span class="msi">contract</span> Are we tied into a contract?</h5>
+                            <p>The standard term is 36 months. That&rsquo;s why the implementation cost is spread across it at &pound;133 a month rather than charged upfront.</p>
+                        </div>
+                        <div class="faq">
+                            <h5><span class="msi">support_agent</span> Who do we call when something goes wrong?</h5>
+                            <p>Our support team, 24/7, by phone, email or live chat from the app. Everyone is UK-based, working out of our Leeds office.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="next-steps">
+            <div class="container">
+                <div class="next-steps-card">
+                    <span class="eyebrow">Next steps</span>
+                    <h3>From here</h3>
+                    <ol class="step-list">
+                        <li><strong>Share this page and the recording</strong> with your director, so everyone sees the same demo. <span class="when">This week</span></li>
+                        <li><strong>Follow-up call:</strong> your feedback after all three demos, and any questions. <span class="when">Tue 10 Nov, 3pm</span></li>
+                        <li><strong>Send us one of your current job sheets</strong> and we&rsquo;ll rebuild it in BigChange, so you see your own paperwork on the app.</li>
+                        <li><strong>Tablets in your hands.</strong> Emilio is happy to come to your office in Suffolk and run a live session with the wider team.</li>
+                        <li><strong>Set-up with your implementation consultant.</strong> Customers, sites, job sheets and engineers&rsquo; hours built in, then the app rolled out to the service team.</li>
+                    </ol>
+
+                    <div class="contact-strip">
+                        <div class="who">Emilio Lavia<span>Account Executive, BigChange</span></div>
+                        <a href="mailto:emilio.lavia@bigchange.com"><span class="msi">mail</span> emilio.lavia@bigchange.com</a>
+                        <a href="tel:07460070793"><span class="msi">call</span> 07460 070793</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container" style="text-align: center;">
+                <div style="display:flex; justify-content:center; align-items:center; gap:1.2rem; margin-bottom:1.8rem; flex-wrap:wrap;">
+                    <span class="logo-chip" style="padding:6px 10px;">
+                        <img src="https://www.independentliving.co.uk/wp-content/uploads/2023/01/TGA-NEW-500x500.jpg" alt="TGA Mobility Logo" style="height:40px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                        <span class="logo-fallback" style="display:none; font-size:1.1rem;">TGA Mobility</span>
+                    </span>
+                    <span style="color:rgba(255,255,255,0.4); font-size:1.3rem; font-weight:bold;">+</span>
+                    <img src="https://i.postimg.cc/ydbgqXFm/Big-Change-White.png" alt="BigChange Logo" style="height:30px;">
+                </div>
+                <h3 style="color: var(--bc-light-grey); margin-bottom: 1rem;">The right engineer, at the right job, with the right paperwork.</h3>
+                <p style="opacity: 0.7;">This proposal has been built specifically for Michelle, Jim and the service team at TGA Mobility.</p>
+                <p style="opacity: 0.7; margin-top: 1rem;">&copy; 2026 BigChange. All rights reserved.</p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // JOURNEY CLICK-THROUGH
+            const stages = [
+                { icon: 'call', lab: 'Call logged', who: 'Office', whoType: 'office', whoText: 'Your service team',
+                  title: 'The customer rings in',
+                  office: ['The job is logged against the customer&rsquo;s address, with every past visit to that scooter on one screen.', 'Motability customers sit under one contract record, so the right response time applies automatically.', 'Choosing the job type attaches the right job sheet and any site notes, such as for a care home.'],
+                  field: ['Nothing yet. The engineer only sees the job once it&rsquo;s in their diary.'],
+                  fieldTitle: 'On the engineer&rsquo;s iPhone',
+                  note: 'Phone, email or live chat: it ends up as one job record, not a printed sheet.' },
+                { icon: 'travel_explore', lab: 'Who&rsquo;s nearby', who: 'Office', whoType: 'office', whoText: 'Your service team',
+                  title: 'Find who&rsquo;s next in the area',
+                  office: ['Leave the date open and the scheduling assistant shows when someone will next be nearby, based on everyone&rsquo;s diary and live location.', 'Each option shows the miles, the cost and how long that engineer usually takes.', 'Sort by soonest, cheapest or best first-time fix, then drop it in the diary.'],
+                  field: ['Skills such as a DBS check are respected, so only the right engineers are suggested for a care home.', 'Working hours and days are built in, including part-time patterns.'],
+                  fieldTitle: 'What it takes into account',
+                  note: 'This is the postcode knowledge you carry in your head today, done by the system.' },
+                { icon: 'mark_email_read', lab: 'Confirmed', who: 'Customer', whoType: 'cust', whoText: 'The customer',
+                  title: 'The customer knows the day',
+                  office: ['A confirmation goes out automatically by email or text, still as an all-day slot.', 'When the customer accepts, the job gets a green outline on the schedule.', 'Replies such as &ldquo;I&rsquo;m out until 11&rdquo; land in your inbox against the job.'],
+                  field: ['A link to confirm the visit, add access notes or ask to rebook, without calling you.'],
+                  fieldTitle: 'What the customer sees',
+                  note: 'Fewer calls in, and you know who&rsquo;s expecting you.' },
+                { icon: 'near_me', lab: 'On the way', who: 'Engineer', whoType: 'sub', whoText: 'Engineer',
+                  title: 'Heading to the customer',
+                  office: ['Live ETAs on the schedule. Hover over any job to see when the engineer will arrive.', 'Travel time between jobs is shown, with a warning if someone&rsquo;s going to run late.'],
+                  field: ['Today&rsquo;s jobs on the app, in whatever order the engineer thinks is best.', 'Tap &ldquo;start driving&rdquo; to open Google Maps or Waze.', 'If you want, the customer gets a link to track the van, like a parcel delivery.'],
+                  note: 'When a customer rings to ask, the answer is already on screen.' },
+                { icon: 'where_to_vote', lab: 'On site', who: 'Engineer', whoType: 'sub', whoText: 'Engineer',
+                  title: 'Arrive and start safely',
+                  office: ['The tracker logs the arrival time when the van enters the area around the address.', 'Time on site is recorded without the engineer doing anything.'],
+                  field: ['Access notes and any special instructions for the address.', 'A quick risk assessment, required before the job can start if you choose.', 'No signal? The app works offline and syncs when it reconnects.'],
+                  note: 'Proof of arrival and a safety record on every visit.' },
+                { icon: 'build', lab: 'Repair', who: 'Engineer', whoType: 'sub', whoText: 'Engineer',
+                  title: 'Fix it and fill in the job sheet',
+                  office: ['If a second visit is needed, a follow-on job drops into the unscheduled list, ready to book.'],
+                  field: ['Your job sheet questions, on the phone.', 'Photos stamped with time, date and location.', 'Speak the notes instead of typing, then tap &ldquo;Improve&rdquo; to tidy the wording.', 'The customer signs on the phone, or by a link sent by text.'],
+                  note: 'No handwriting to decipher and no paper to bring back to the office.' },
+                { icon: 'task_alt', lab: 'Report', who: 'Automatic', whoType: 'office', whoText: 'Happens automatically',
+                  title: 'Job report, done before the van leaves',
+                  office: ['A full job report with photos, signatures and the risk assessment, on your own template.', 'It can go to the customer automatically, or wait for an office check.', 'An invoice and a Stripe payment link too, for private repairs if you want them.'],
+                  field: ['A full audit trail: logged, booked, accepted, arrived, completed.', 'Every visit to that address in one folder.', 'Reports on first-time fix rate, hours and performance by engineer.'],
+                  fieldTitle: 'What builds up over time',
+                  note: 'One record per repair, from the first phone call to the finished report.' }
+            ];
+            const stepsWrap = document.getElementById('j-steps');
+            const panel = document.getElementById('j-panel');
+            const fill = document.getElementById('j-track-fill');
+            const prevBtn = document.getElementById('j-prev');
+            const nextBtn = document.getElementById('j-next');
+            const countEl = document.getElementById('j-count');
+            if (stepsWrap && panel) {
+                let cur = 0;
+                const whoIcon = { office: 'support_agent', cust: 'person', sub: 'engineering' };
+                const list = (arr) => '<ul>' + arr.map(x => '<li>' + x + '</li>').join('') + '</ul>';
+                const render = () => {
+                    const s = stages[cur];
+                    panel.style.opacity = 0;
+                    setTimeout(() => {
+                        panel.innerHTML =
+                            '<div class="j-head"><div><span class="j-num">Stage ' + (cur + 1) + ' of ' + stages.length + '</span><h3>' + s.title + '</h3></div>' +
+                            '<span class="j-whochip ' + s.whoType + '"><span class="msi">' + whoIcon[s.whoType] + '</span>' + s.whoText + '</span></div>' +
+                            '<div class="j-cols">' +
+                                '<div class="j-col"><h4><span class="msi">desktop_windows</span>What your office sees</h4>' + list(s.office) + '</div>' +
+                                '<div class="j-col field"><h4><span class="msi">' + (s.fieldTitle ? 'insights' : 'smartphone') + '</span>' + (s.fieldTitle || 'On the engineer&rsquo;s iPhone') + '</h4>' + list(s.field) + '</div>' +
+                            '</div>' +
+                            '<div class="lp-note"><span class="msi">check_circle</span><span>' + s.note + '</span></div>';
+                        panel.style.opacity = 1;
+                    }, 150);
+                    stepsWrap.querySelectorAll('.j-step').forEach((b, i) => {
+                        b.classList.toggle('active', i === cur);
+                        b.classList.toggle('done', i < cur);
+                        b.setAttribute('aria-selected', i === cur ? 'true' : 'false');
+                    });
+                    if (fill) fill.style.width = (cur / (stages.length - 1) * 100) + '%';
+                    prevBtn.disabled = cur === 0;
+                    nextBtn.disabled = cur === stages.length - 1;
+                    countEl.textContent = (cur + 1) + ' / ' + stages.length;
+                };
+                stages.forEach((s, i) => {
+                    const li = document.createElement('li');
+                    li.style.display = 'contents';
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'j-step';
+                    b.setAttribute('role', 'tab');
+                    b.innerHTML = '<span class="j-dot"><span class="msi">' + s.icon + '</span></span><span class="j-lab">' + s.lab + '</span><span class="j-who">' + s.who + '</span>';
+                    b.addEventListener('click', () => { cur = i; render(); });
+                    li.appendChild(b);
+                    stepsWrap.appendChild(li);
+                });
+                prevBtn.addEventListener('click', () => { if (cur > 0) { cur--; render(); } });
+                nextBtn.addEventListener('click', () => { if (cur < stages.length - 1) { cur++; render(); } });
+                render();
+            }
+
+            // FEATURE HUB
+            const hub = document.getElementById('platform-hub');
+            const tileGrid = document.getElementById('feature-tile-grid');
+            const featureDisplayContent = document.getElementById('feature-display-content');
+            if (hub && featureDisplayContent) {
+                const features = [
+                    { name: 'Scheduling assistant', icon: 'auto_awesome', desc: 'Looks at every engineer&rsquo;s diary, skills and live location, and suggests who should take a new job, with the miles, cost and likely duration of each option.', you: 'Finds who&rsquo;s next near that postcode, so it no longer depends on one person&rsquo;s memory.' },
+                    { name: 'Route optimisation', icon: 'route', desc: 'Orders each day using live traffic, the engineer&rsquo;s start and finish points, and any time windows on jobs.', you: 'No more routing every day by hand in Google Maps.' },
+                    { name: 'Bulk scheduling', icon: 'event_available', desc: 'Select up to 1,000 unscheduled jobs and plan them across the team in one go, respecting dates, hours and constraints.', you: 'A month of annual services planned in minutes.' },
+                    { name: 'Recurring services', icon: 'event_repeat', desc: 'Set a job to repeat every 12 months. When it&rsquo;s due, it drops into an unscheduled list ready to book.', you: 'Annual services come round automatically.' },
+                    { name: 'SLAs &amp; priorities', icon: 'priority_high', desc: 'Response times and priorities set by contract and job type, so some jobs override others.', you: 'Motability breakdowns, warranty and cancellation-period jobs get the priority they need.' },
+                    { name: 'Live map &amp; job flags', icon: 'map', desc: 'See every van on a map, then lay outstanding jobs over it as flags.', you: 'Spot the services near today&rsquo;s breakdown and add them to the route.' },
+                    { name: 'Vehicle tracking', icon: 'gps_fixed', desc: 'Hard-wired trackers with live positions, journey history, driver behaviour and the cost of each trip.', you: 'Built into the schedule rather than in a separate Trackmate login.' },
+                    { name: 'Arrival detection', icon: 'radar', desc: 'A boundary around each address logs when the van arrives and leaves, even if the engineer forgets to tap.', you: 'Accurate time on site for every visit.' },
+                    { name: 'ETAs &amp; tracking links', icon: 'share_location', desc: 'Live ETAs on the schedule, plus an optional link that lets the customer follow the van.', you: 'Answer &ldquo;when will he be here?&rdquo; without ringing the engineer.' },
+                    { name: 'Engineer app', icon: 'phone_iphone', desc: 'Jobs, directions, job sheets, photos, signatures, timesheets and messages with the office, on iOS or Android, online or offline.', you: 'Runs on your engineers&rsquo; iPhones. Tablets and cradles are an option.' },
+                    { name: 'Digital job sheets', icon: 'assignment', desc: 'Your own questions, photos and signatures, chosen by job type, with mandatory steps if you need them.', you: 'Your current paper job sheet, rebuilt on the app.' },
+                    { name: 'Risk assessments', icon: 'health_and_safety', desc: 'Dynamic risk assessments that must be completed before the job can start, with special instructions by site type.', you: 'Care homes and hospitals get their own checks and notes.' },
+                    { name: 'AI voice notes', icon: 'mic', desc: 'Part of Lightning. Engineers speak their notes, then tap &ldquo;Improve&rdquo; to correct spelling and tidy the wording.', you: 'Clear, professional reports without asking engineers to write them.' },
+                    { name: 'Vehicle checks', icon: 'fact_check', desc: 'Walk-round checks on the app, with photos of defects sent to the office, plus MOT, tax, insurance and service reminders.', you: 'Your Friday checks, recorded and enforced.' },
+                    { name: 'Timesheet check', icon: 'rule', desc: 'A report that compares timesheets with tracking data and flags any gaps.', you: 'Can be emailed to you every Monday, so you don&rsquo;t have to cross-check two systems.' },
+                    { name: 'CRM &amp; site history', icon: 'contacts', desc: 'Every customer, address and visit in one place, with a folder for each job and a full audit trail.', you: 'Motability customers grouped under one contract, private customers kept separate.' },
+                    { name: 'Invoicing &amp; payments', icon: 'request_quote', desc: 'Invoices built from the completed job, sent with the report, with Stripe payment links and an unpaid-invoice view.', you: 'Available for private repairs whenever you want it.' },
+                    { name: 'AI reporting', icon: 'insights', desc: 'Ask questions about your data in plain English and turn the answers into charts and dashboards.', you: 'How many services were completed this month, and which are still outstanding?' }
+                ];
+
+                const updateFeatureDisplay = (feature) => {
+                    featureDisplayContent.style.opacity = 0;
+                    setTimeout(() => {
+                        featureDisplayContent.innerHTML =
+                            '<div class="fd-head"><span class="msi">' + feature.icon + '</span><h3>' + feature.name + '</h3></div>' +
+                            '<p class="fd-desc">' + feature.desc + '</p>' +
+                            '<div class="fd-you"><span class="msi">check_circle</span><span>For TGA Mobility: ' + feature.you + '</span></div>' +
+                            '<div class="fd-count">' + (features.indexOf(feature) + 1) + ' of ' + features.length + '</div>';
+                        featureDisplayContent.style.opacity = 1;
+                    }, 200);
+                };
+                const setActive = (nodes, node) => { nodes.forEach(n => n.classList.remove('active')); node.classList.add('active'); };
+
+                if (tileGrid) {
+                    features.forEach((feature, i) => {
+                        const t = document.createElement('button');
+                        t.type = 'button';
+                        t.className = 'feature-tile' + (i === 0 ? ' active' : '');
+                        t.innerHTML = '<span class="msi">' + feature.icon + '</span><span class="feature-name">' + feature.name + '</span>';
+                        t.addEventListener('click', () => { updateFeatureDisplay(feature); setActive(tileGrid.querySelectorAll('.feature-tile'), t); });
+                        tileGrid.appendChild(t);
+                    });
+                }
+
+                let activeIndex = 0;
+                const buildHub = () => {
+                    hub.querySelectorAll('.hub-node, .hub-line').forEach(el => el.remove());
+                    const w = hub.offsetWidth;
+                    if (!w) return;
+                    const cx = w / 2, cy = hub.offsetHeight / 2;
+                    const nodeR = 43;
+                    const outerRadius = w / 2 - nodeR - 2;
+                    const innerRadius = w / 2 - nodeR - 98;
+                    const outer = features.filter((_, i) => i % 2 === 0);
+                    const inner = features.filter((_, i) => i % 2 !== 0);
+                    const place = (list, radius, isOuter) => {
+                        const step = (2 * Math.PI) / list.length;
+                        list.forEach((feature, i) => {
+                            const angle = (i * step) - (Math.PI / 2) + (isOuter ? 0 : step / 2);
+                            const x = radius * Math.cos(angle) + cx - nodeR;
+                            const y = radius * Math.sin(angle) + cy - nodeR;
+                            const node = document.createElement('div');
+                            node.className = 'hub-node' + (features.indexOf(feature) === activeIndex ? ' active' : '');
+                            node.tabIndex = 0;
+                            node.setAttribute('role', 'button');
+                            node.setAttribute('aria-label', feature.name.replace(/&amp;/g, '&'));
+                            node.style.left = x + 'px';
+                            node.style.top = y + 'px';
+                            node.innerHTML = '<span class="msi">' + feature.icon + '</span><span class="feature-name">' + feature.name + '</span>';
+                            const activate = () => { activeIndex = features.indexOf(feature); updateFeatureDisplay(feature); setActive(hub.querySelectorAll('.hub-node'), node); };
+                            node.addEventListener('click', activate);
+                            node.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+                            const line = document.createElement('div');
+                            line.className = 'hub-line';
+                            const dist = Math.sqrt(Math.pow(x + nodeR - cx, 2) + Math.pow(y + nodeR - cy, 2));
+                            const rot = Math.atan2(y + nodeR - cy, x + nodeR - cx) * (180 / Math.PI);
+                            line.style.width = Math.max(dist - nodeR + 8, 0) + 'px';
+                            line.style.top = cy + 'px';
+                            line.style.left = cx + 'px';
+                            line.style.transform = 'rotate(' + rot + 'deg)';
+                            hub.appendChild(line);
+                            hub.appendChild(node);
+                        });
+                    };
+                    place(outer, outerRadius, true);
+                    place(inner, innerRadius, false);
+                };
+                buildHub();
+                let resizeTimer;
+                window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(buildHub, 200); });
+                updateFeatureDisplay(features[0]);
+            }
+
+            // Scroll-reveal
+            const revealEls = Array.from(document.querySelectorAll('.brief-band.light, .section-title, .compare, .edge-band, .stack-grid, .quote-pair, .journey, .assure-grid, .cs-grid, .next-steps-card, .keep-strip'));
+            revealEls.forEach(el => el.classList.add('reveal'));
+            if ('IntersectionObserver' in window) {
+                const io = new IntersectionObserver((entries) => {
+                    entries.forEach((entry, i) => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => entry.target.classList.add('visible'), Math.min(i, 4) * 70);
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.08 });
+                revealEls.forEach(el => io.observe(el));
+                setTimeout(() => revealEls.forEach(el => el.classList.add('visible')), 2500);
+            } else {
+                revealEls.forEach(el => el.classList.add('visible'));
+            }
+
+            const nav = document.getElementById('sticky-nav');
+            if (nav) {
+                const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 20);
+                window.addEventListener('scroll', onScroll, { passive: true });
+                onScroll();
+            }
+        });
+    </script>
+</body>
+</html>
